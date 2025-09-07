@@ -402,7 +402,18 @@ export class ExportService {
       });
 
       const compiledTemplate = handlebars.compile(template);
-      return compiledTemplate({ ...data, overlay });
+
+      // Convert Mongoose documents to plain objects to avoid Handlebars prototype access warnings
+      const toPlain = (doc: any) => (doc && typeof doc.toObject === 'function')
+        ? doc.toObject({ getters: true, virtuals: true })
+        : doc;
+
+      const plainProject = toPlain((data as any).project);
+      const plainFeedback = Array.isArray((data as any).feedback)
+        ? (data as any).feedback.map((f: any) => toPlain(f))
+        : (data as any).feedback;
+
+      return compiledTemplate({ ...data, project: plainProject, feedback: plainFeedback, overlay });
     } catch (error) {
       const msg = error instanceof Error && /Cannot find module|ERR_MODULE_NOT_FOUND/.test(error.message)
         ? 'HTML generation requires handlebars to be installed. Please install it to enable PDF export.'

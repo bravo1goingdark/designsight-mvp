@@ -1,4 +1,5 @@
 import express, { Router } from 'express';
+import mongoose from 'mongoose';
 import Feedback from '../models/Feedback';
 import { AppError } from '../middleware/errorHandler';
 
@@ -7,11 +8,16 @@ const router: Router = express.Router();
 // GET /api/feedback/project/:projectId - Get all feedback for a project
 router.get('/project/:projectId', async (req, res, next) => {
   try {
-    const { projectId } = req.params;
+    const { projectId: projectIdParam } = req.params;
     const { imageId, category, severity, role, status } = req.query;
 
+    // Validate projectId
+    if (!mongoose.Types.ObjectId.isValid(String(projectIdParam))) {
+      return next(new AppError('Invalid projectId', 400));
+    }
+
     // Build a filter object
-    const filter: any = { projectId };
+    const filter: any = { projectId: projectIdParam };
     
     if (imageId) filter.imageId = imageId;
     if (category) filter.category = category;
@@ -67,6 +73,11 @@ router.post('/', async (req, res, next) => {
     // Validate required fields
     if (!projectId || !imageId || !title || !description || !category || !severity || !coordinates) {
       return next(new AppError('Missing required fields', 400));
+    }
+
+    // Validate projectId format
+    if (!mongoose.Types.ObjectId.isValid(String(projectId))) {
+      return next(new AppError('Invalid projectId', 400));
     }
 
     const feedback = await Feedback.create({
@@ -153,11 +164,16 @@ router.delete('/:id', async (req, res, next) => {
 router.get('/roles/:role', async (req, res, next) => {
   try {
     const { role } = req.params;
-    const { projectId, imageId } = req.query;
+    const { projectId, imageId } = req.query as { projectId?: string; imageId?: string };
 
     const filter: any = { roles: { $in: [role] } };
     
-    if (projectId) filter.projectId = projectId;
+    if (projectId) {
+      if (!mongoose.Types.ObjectId.isValid(String(projectId))) {
+        return next(new AppError('Invalid projectId', 400));
+      }
+      filter.projectId = projectId;
+    }
     if (imageId) filter.imageId = imageId;
 
     const feedback = await Feedback.find(filter)

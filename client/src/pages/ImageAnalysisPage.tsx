@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useProject } from '../contexts/ProjectContext'
 import { useRole } from '../contexts/RoleContext'
-import { feedbackApi, aiApi, commentApi, exportApi, Feedback, Comment, fileUrl } from '../services/api'
+import { feedbackApi, aiApi, commentApi, exportApi, Feedback, Comment, fileUrl, projectApi } from '../services/api'
 import { cn } from '../utils/cn'
 import { 
   ArrowLeft, 
@@ -67,6 +67,24 @@ const ImageAnalysisPage: React.FC = () => {
     }
   }, [projects, projectId, imageId])
 
+  // Fallback: if image not found in context (e.g., immediately after upload), fetch latest project by ID
+  useEffect(() => {
+    const ensureLatestProject = async () => {
+      if (!project || !image) {
+        try {
+          const resp = await projectApi.getById(projectId!)
+          const proj = resp.data.data
+          setProject(proj)
+          const foundImage = proj.images?.find((img: any) => img.id === imageId) || null
+          if (foundImage) setImage(foundImage)
+        } catch (e) {
+          // no-op; UI already shows a friendly state if not found
+        }
+      }
+    }
+    ensureLatestProject()
+  }, [project, image, projectId, imageId])
+
   useEffect(() => {
     if (project && image) {
       fetchFeedback()
@@ -112,6 +130,7 @@ const ImageAnalysisPage: React.FC = () => {
 
     setFilteredFeedback(filtered)
   }
+
 
   const drawFeedbackOverlays = () => {
     const canvas = canvasRef.current

@@ -21,7 +21,7 @@ import toast from 'react-hot-toast'
 const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
-  const { projects, updateProject, deleteProject } = useProject()
+  const { projects, updateProject, deleteProject, fetchProjects, setCurrentProject } = useProject()
   const { currentRole } = useRole()
   
   const [project, setProject] = useState(projects.find(p => p._id === projectId) || null)
@@ -50,7 +50,14 @@ const ProjectPage: React.FC = () => {
       const response = await uploadApi.uploadImage(project._id, file)
       const { image, project: updatedProject } = response.data.data
       
+      // Update local and global project state so other pages can see the new image immediately
       setProject(updatedProject)
+      try {
+        setCurrentProject(updatedProject)
+      } catch {}
+      try {
+        await fetchProjects()
+      } catch {}
       toast.success('Image uploaded successfully')
     } catch (error: any) {
       toast.error(error.response?.data?.error || 'Failed to upload image')

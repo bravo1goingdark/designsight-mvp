@@ -1,4 +1,5 @@
 import express, { Router } from 'express';
+import mongoose from 'mongoose';
 import Project from '../models/Project';
 import Feedback from '../models/Feedback';
 import { ExportService, ExportData } from '../services/exportService';
@@ -13,6 +14,11 @@ router.post('/pdf', async (req, res, next) => {
 
     if (!projectId) {
       return next(new AppError('Project ID is required', 400));
+    }
+
+    // Validate projectId
+    if (!mongoose.Types.ObjectId.isValid(String(projectId))) {
+      return next(new AppError('Invalid projectId', 400));
     }
 
     // Get project data
@@ -72,6 +78,11 @@ router.post('/json', async (req, res, next) => {
       return next(new AppError('Project ID is required', 400));
     }
 
+    // Validate projectId
+    if (!mongoose.Types.ObjectId.isValid(String(projectId))) {
+      return next(new AppError('Invalid projectId', 400));
+    }
+
     // Get project data
     const project = await Project.findById(projectId);
     if (!project) {
@@ -124,6 +135,11 @@ const handlePreview = async (req: express.Request, res: express.Response, next: 
   try {
     const { projectId, imageId } = req.params as { projectId: string; imageId?: string };
     const { role } = req.query;
+
+    // Validate projectId
+    if (!mongoose.Types.ObjectId.isValid(String(projectId))) {
+      return next(new AppError('Invalid projectId', 400));
+    }
 
     // Get project data
     const project = await Project.findById(projectId);
