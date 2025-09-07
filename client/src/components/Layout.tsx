@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useRole } from '../contexts/RoleContext'
 import { useProject } from '../contexts/ProjectContext'
@@ -23,7 +23,20 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { projects } = useProject()
   const location = useLocation()
   const isGlobalLoading = useGlobalLoading()
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
+    try {
+      const v = localStorage.getItem('ds:sidebar')
+      return v ? v === 'open' : true
+    } catch {
+      return true
+    }
+  })
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('ds:sidebar', isSidebarOpen ? 'open' : 'closed')
+    } catch {}
+  }, [isSidebarOpen])
 
   const roles = [
     { id: 'designer' as const, icon: Palette, label: 'Designer' },
