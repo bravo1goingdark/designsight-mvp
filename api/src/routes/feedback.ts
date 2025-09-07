@@ -10,7 +10,7 @@ router.get('/project/:projectId', async (req, res, next) => {
     const { projectId } = req.params;
     const { imageId, category, severity, role, status } = req.query;
 
-    // Build filter object
+    // Build a filter object
     const filter: any = { projectId };
     
     if (imageId) filter.imageId = imageId;

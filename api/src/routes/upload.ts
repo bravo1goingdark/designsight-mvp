@@ -19,7 +19,7 @@ const upload = multer({
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);
     } else {
-      // According to multer types, when passing an error you should not pass the second argument
+      // According to multer types, when passing an error, you should not pass the second argument
       return cb(new AppError('Only image files are allowed', 400));
     }
   }

@@ -36,7 +36,7 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-// POST /api/projects - Create new project
+// POST /api/projects - Create a new project
 router.post('/', async (req, res, next) => {
   try {
     const { name, description } = req.body;
