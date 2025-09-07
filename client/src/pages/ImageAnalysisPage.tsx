@@ -39,6 +39,7 @@ const ImageAnalysisPage: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [analyzing, setAnalyzing] = useState(false)
   const [exporting, setExporting] = useState<null | 'pdf' | 'json'>(null)
+  const [exportRoleOnly, setExportRoleOnly] = useState(true)
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState({
     category: '',
@@ -163,7 +164,7 @@ const ImageAnalysisPage: React.FC = () => {
       const scaledY = y * scaleY
       const scaledWidth = width * scaleX
       const scaledHeight = height * scaleY
-
+      
       // Set color based on severity
       let color = '#3b82f6' // default blue
       switch (item.severity) {
@@ -178,16 +179,24 @@ const ImageAnalysisPage: React.FC = () => {
           break
       }
 
+      const isSelected = selectedFeedback && selectedFeedback._id === item._id
+      
       // Draw rectangle
       ctx.strokeStyle = color
-      ctx.lineWidth = 2
+      ctx.lineWidth = isSelected ? 3 : 2
       ctx.setLineDash([5, 5])
+      if (isSelected) {
+        ctx.shadowColor = color
+        ctx.shadowBlur = 8
+      } else {
+        ctx.shadowBlur = 0
+      }
       ctx.strokeRect(scaledX, scaledY, scaledWidth, scaledHeight)
-
+      
       // Draw semi-transparent fill
       ctx.fillStyle = color + '20' // 20% opacity
       ctx.fillRect(scaledX, scaledY, scaledWidth, scaledHeight)
-
+      
       // Draw number indicator
       ctx.fillStyle = color
       ctx.font = '12px -apple-system, BlinkMacSystemFont, sans-serif'
@@ -328,7 +337,7 @@ const ImageAnalysisPage: React.FC = () => {
       const response = await exportApi.generatePDF({
         projectId: project._id,
         imageId: image.id,
-        role: currentRole,
+        role: exportRoleOnly ? currentRole : undefined,
         includeComments: true
       })
 
@@ -360,7 +369,7 @@ const ImageAnalysisPage: React.FC = () => {
       const response = await exportApi.generateJSON({
         projectId: project._id,
         imageId: image.id,
-        role: currentRole,
+        role: exportRoleOnly ? currentRole : undefined,
         includeComments: true
       })
 
@@ -443,12 +452,23 @@ const ImageAnalysisPage: React.FC = () => {
             {showOverlay ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
             {showOverlay ? 'Hide' : 'Show'} Overlay
           </button>
-          <button
-            onClick={handleExportPDF}
-            disabled={exporting === 'pdf'}
-            className="btn btn-outline btn-sm"
-            title="Export PDF Report"
-          >
+          {/* Export controls */}
+          <div className="flex items-center space-x-2">
+            <label className="flex items-center text-xs text-gray-600 mr-2">
+              <input
+                type="checkbox"
+                className="mr-1"
+                checked={exportRoleOnly}
+                onChange={(e) => setExportRoleOnly(e.target.checked)}
+              />
+              Role-only
+            </label>
+            <button
+              onClick={handleExportPDF}
+              disabled={exporting === 'pdf'}
+              className="btn btn-outline btn-sm"
+              title="Export PDF Report"
+            >
             {exporting === 'pdf' ? (
               <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
             ) : (
@@ -456,19 +476,20 @@ const ImageAnalysisPage: React.FC = () => {
             )}
             {exporting === 'pdf' ? 'Generating…' : 'PDF'}
           </button>
-          <button
-            onClick={handleExportJSON}
-            disabled={exporting === 'json'}
-            className="btn btn-outline btn-sm"
-            title="Export JSON Data"
-          >
+            <button
+              onClick={handleExportJSON}
+              disabled={exporting === 'json'}
+              className="btn btn-outline btn-sm"
+              title="Export JSON Data"
+            >
             {exporting === 'json' ? (
               <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
             ) : (
               <FileJson className="w-4 h-4 mr-2" />
             )}
             {exporting === 'json' ? 'Preparing…' : 'JSON'}
-          </button>
+            </button>
+          </div>
           <button
             onClick={handleAnalyzeImage}
             disabled={analyzing}

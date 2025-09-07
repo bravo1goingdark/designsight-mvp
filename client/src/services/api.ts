@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { globalLoading } from '../utils/globalLoading'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api'
 
@@ -14,9 +15,11 @@ const api = axios.create({
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
+    globalLoading.inc()
     return config
   },
   (error) => {
+    globalLoading.dec()
     return Promise.reject(error)
   }
 )
@@ -24,9 +27,11 @@ api.interceptors.request.use(
 // Response interceptor
 api.interceptors.response.use(
   (response) => {
+    globalLoading.dec()
     return response
   },
   (error) => {
+    globalLoading.dec()
     console.error('API Error:', error.response?.data || error.message)
     return Promise.reject(error)
   }

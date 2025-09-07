@@ -9,6 +9,7 @@ import {
   Target,
   Code
 } from 'lucide-react'
+import { useGlobalLoading } from '../hooks/useGlobalLoading'
 
 interface LayoutProps {
   children: ReactNode
@@ -17,6 +18,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { currentRole, setCurrentRole, getRoleDisplayName, getRoleColor } = useRole()
   const location = useLocation()
+  const isGlobalLoading = useGlobalLoading()
 
   const roles = [
     { id: 'designer' as const, icon: Palette, label: 'Designer' },
@@ -31,6 +33,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Global top loading bar */}
+      <div className={cn('fixed top-0 left-0 right-0 h-0.5 bg-primary-600 z-50 transition-opacity', isGlobalLoading ? 'opacity-100 animate-pulse' : 'opacity-0')} />
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
