@@ -1,6 +1,6 @@
 # DesignSight MVP
 
-DesignSight is an AI‑powered design feedback platform (MERN) that provides structured, coordinate‑anchored feedback on uploaded designs, role‑based filtering, and export for handoff.
+DesignSight is an AI-powered design feedback platform built on MERN. It analyzes uploaded screenshots with Google Cloud Vision to generate structured, coordinate-anchored feedback you can filter by role (Designer, Reviewer, PM, Developer). Discuss via threaded comments and export development-ready PDF/JSON reports. Ships with Docker Compose, MongoDB, and MinIO for easy local or cloud deployment.
 
 ## Quick start (Docker)
 
