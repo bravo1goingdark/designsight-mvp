@@ -9,7 +9,7 @@ const router: Router = express.Router();
 // POST /api/export/pdf - Generate PDF report
 router.post('/pdf', async (req, res, next) => {
   try {
-    const { projectId, imageId /*, role*/ } = req.body;
+    const { projectId, imageId, role } = req.body as { projectId: string; imageId?: string; role?: string };
 
     if (!projectId) {
       return next(new AppError('Project ID is required', 400));
@@ -30,10 +30,10 @@ router.post('/pdf', async (req, res, next) => {
       }
     }
 
-    // Build feedback filter (include ALL roles for richer PDF output)
+    // Build feedback filter. If role provided, filter by role; otherwise include all.
     const filter: any = { projectId };
     if (imageId) filter.imageId = imageId;
-    // Intentionally not filtering by role for PDF to include all relevant feedback
+    if (role) filter.roles = { $in: [role] };
 
     // Get feedback data
     const feedback = await Feedback.find(filter).sort({ createdAt: -1 });
@@ -44,6 +44,7 @@ router.post('/pdf', async (req, res, next) => {
       ...(image && { image }),
       feedback,
       exportDate: new Date().toISOString(),
+      ...(role && { role }),
       summary: ExportService.generateSummary(feedback)
     };
 

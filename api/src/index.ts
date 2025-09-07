@@ -15,6 +15,7 @@ import commentRoutes from './routes/comments';
 import uploadRoutes from './routes/upload';
 import aiRoutes from './routes/ai';
 import exportRoutes from './routes/export';
+import maintenanceRoutes from './routes/maintenance';
 
 // Load environment variables
 dotenv.config();
@@ -63,6 +64,7 @@ app.use('/api/comments', commentRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/export', exportRoutes);
+app.use('/api/maintenance', maintenanceRoutes);
 
 // Error handling middleware
 app.use(notFound);
