@@ -1,13 +1,16 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useRole } from '../contexts/RoleContext'
+import { useProject } from '../contexts/ProjectContext'
 import { cn } from '../utils/cn'
 import { 
   FolderOpen, 
   Palette,
   Eye,
   Target,
-  Code
+  Code,
+  Menu,
+  X
 } from 'lucide-react'
 import { useGlobalLoading } from '../hooks/useGlobalLoading'
 
@@ -17,8 +20,10 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { currentRole, setCurrentRole, getRoleDisplayName, getRoleColor } = useRole()
+  const { projects } = useProject()
   const location = useLocation()
   const isGlobalLoading = useGlobalLoading()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
   const roles = [
     { id: 'designer' as const, icon: Palette, label: 'Designer' },
@@ -39,8 +44,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo */}
+            {/* Logo + sidebar toggler */}
             <div className="flex items-center">
+              {!isSidebarOpen && (
+                <button
+                  onClick={() => setIsSidebarOpen(true)}
+                  className="mr-2 p-2 rounded-md text-gray-600 hover:bg-gray-100"
+                  aria-label="Open sidebar"
+                  title="Open sidebar"
+                >
+                  <Menu className="w-5 h-5" />
+                </button>
+              )}
               <Link to="/" className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
                   <Eye className="w-5 h-5 text-white" />
@@ -83,31 +98,75 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       <div className="flex">
         {/* Sidebar */}
-        <nav className="w-64 bg-white shadow-sm border-r border-gray-200 min-h-screen">
-          <div className="p-4">
-            <ul className="space-y-2">
-              {navigation.map((item) => {
-                const isActive = location.pathname === item.href
-                return (
-                  <li key={item.name}>
-                    <Link
-                      to={item.href}
-                      className={cn(
-                        'flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                        isActive
-                          ? 'bg-primary-100 text-primary-700'
-                          : 'text-gray-600 hover:bg-gray-100'
-                      )}
-                    >
-                      <item.icon className="w-5 h-5" />
-                      <span>{item.name}</span>
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        </nav>
+        {isSidebarOpen && (
+          <nav className="w-64 bg-white shadow-sm border-r border-gray-200 min-h-screen flex flex-col">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+              <div className="flex items-center space-x-2 text-sm font-semibold text-gray-900">
+                <FolderOpen className="w-4 h-4" />
+                <span>Projects</span>
+              </div>
+              <button
+                onClick={() => setIsSidebarOpen(false)}
+                className="p-1 rounded-md text-gray-600 hover:bg-gray-100"
+                aria-label="Close sidebar"
+                title="Close sidebar"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-4 overflow-y-auto">
+              {/* Home link */}
+              <ul className="space-y-2 mb-4">
+                {navigation.map((item) => {
+                  const isActive = location.pathname === item.href
+                  return (
+                    <li key={item.name}>
+                      <Link
+                        to={item.href}
+                        className={cn(
+                          'flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                          isActive
+                            ? 'bg-primary-100 text-primary-700'
+                            : 'text-gray-600 hover:bg-gray-100'
+                        )}
+                      >
+                        <item.icon className="w-5 h-5" />
+                        <span>{item.name}</span>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+
+              {/* All projects */}
+              <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">All Projects</h4>
+              <ul className="space-y-1">
+                {projects.map((p) => {
+                  const href = `/project/${p._id}`
+                  const isActive = location.pathname.startsWith(href)
+                  return (
+                    <li key={p._id}>
+                      <Link
+                        to={href}
+                        className={cn(
+                          'block px-3 py-2 rounded-md text-sm truncate transition-colors',
+                          isActive ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-gray-100'
+                        )}
+                        title={p.name}
+                      >
+                        {p.name}
+                      </Link>
+                    </li>
+                  )
+                })}
+                {projects.length === 0 && (
+                  <li className="text-xs text-gray-500 px-3 py-2">No projects yet</li>
+                )}
+              </ul>
+            </div>
+          </nav>
+        )}
 
         {/* Main Content */}
         <main className="flex-1 p-6">
