@@ -85,9 +85,6 @@ Copy the example environment file and configure:
 cp api/env.example api/.env
 ```
 
-If using Docker, provide your Google Vision service account JSON and update docker-compose.yml
-environment/volume paths accordingly (the file name/path is an example placeholder).
-
 Edit `api/.env` with your configuration:
 ```env
 # Database
@@ -144,11 +141,10 @@ This will start:
 - **MongoDB** on port 27017
 - **MinIO** on ports 9000 (API) and 9001 (Console)
 - **API Server** on port 4000
-- **Frontend (Docker)** on port 5174 (Vite dev server is 5173 in local dev)
+- **Frontend** on port 5173
 
 ### 5. Access the Application
-- **Frontend (Docker)**: http://localhost:5174
-- **Frontend (Dev)**: http://localhost:5173
+- **Frontend**: http://localhost:5173
 - **API**: http://localhost:4000
 - **MinIO Console**: http://localhost:9001 (minioadmin/minioadmin)
 
@@ -302,27 +298,13 @@ For support and questions:
 ## 🎯 Demo Instructions
 
 1. Start the application with `docker-compose up --build`
-2. Navigate to http://localhost:5174 (Docker) or http://localhost:5173 (dev)
+2. Navigate to http://localhost:5173
 3. Create a new project
 4. Upload a design image (PNG/JPG recommended)
 5. Click "AI Analyze" to generate feedback
 6. Switch between different roles to see filtered feedback
 7. Click on feedback items to view discussions
 8. Add comments and collaborate on feedback
-
-### Seed Demo Data (optional)
-You can pre-load a demo project and image:
-
-```bash
-# In ./api with .env configured (Mongo, MinIO, Google Vision)
-pnpm run seed
-```
-
-Environment variables for seeding (optional):
-- SEED_PROJECT_NAME
-- SEED_PROJECT_DESCRIPTION
-- SEED_IMAGE_URL (required to upload an image)
-- SEED_RUN_AI=true (to immediately run AI on the seeded image)
 
 ### Sample Test Images
 - Use actual UI/UX design screenshots for best results

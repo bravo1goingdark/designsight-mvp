@@ -27,7 +27,7 @@ interface FeedbackData {
 }
 
 export class AIService {
-  static async analyzeDesign(imageUrl: string, imageWidth?: number, imageHeight?: number): Promise<DesignAnalysisResult> {
+  static async analyzeDesign(imageUrl: string): Promise<DesignAnalysisResult> {
     try {
       // Download image from URL
       const imageBuffer = await this.downloadImage(imageUrl);
@@ -46,7 +46,7 @@ export class AIService {
         objectDetection,
         colorAnalysis,
         safeSearch
-      }, { width: imageWidth, height: imageHeight });
+      });
 
       return {
         feedback,
@@ -119,7 +119,7 @@ export class AIService {
     }
   }
 
-  private static generateFeedbackFromAnalysis(analysis: any, dims?: { width?: number; height?: number }): FeedbackData[] {
+  private static generateFeedbackFromAnalysis(analysis: any): FeedbackData[] {
     const feedback: FeedbackData[] = [];
 
     // Analyze text readability and accessibility
@@ -130,7 +130,7 @@ export class AIService {
 
     // Analyze visual hierarchy
     if (analysis.objectDetection.length > 0) {
-      const hierarchyIssues = this.analyzeVisualHierarchy(analysis.objectDetection, dims);
+      const hierarchyIssues = this.analyzeVisualHierarchy(analysis.objectDetection);
       feedback.push(...hierarchyIssues);
     }
 
@@ -184,29 +184,26 @@ export class AIService {
     return feedback;
   }
 
-  private static analyzeVisualHierarchy(objectAnnotations: any[], dims?: { width?: number; height?: number }): FeedbackData[] {
+  private static analyzeVisualHierarchy(objectAnnotations: any[]): FeedbackData[] {
     const feedback: FeedbackData[] = [];
     
     // Check for button-like objects
-    const buttons = objectAnnotations.filter((obj: any) => 
+    const buttons = objectAnnotations.filter(obj => 
       obj.name?.toLowerCase().includes('button') || 
       obj.name?.toLowerCase().includes('click')
     );
 
     if (buttons.length > 1) {
       // Check if buttons are properly spaced
-      const spacingIssues = this.checkButtonSpacing(buttons, dims);
+      const spacingIssues = this.checkButtonSpacing(buttons);
       feedback.push(...spacingIssues);
     }
 
     return feedback;
   }
 
-  private static checkButtonSpacing(buttons: any[], dims?: { width?: number; height?: number }): FeedbackData[] {
+  private static checkButtonSpacing(buttons: any[]): FeedbackData[] {
     const feedback: FeedbackData[] = [];
-
-    const widthPx = dims?.width && dims.width > 0 ? dims.width : 1000;
-    const heightPx = dims?.height && dims.height > 0 ? dims.height : 1000;
     
     for (let i = 0; i < buttons.length - 1; i++) {
       const button1 = buttons[i];
@@ -218,13 +215,7 @@ export class AIService {
       if (vertices1.length >= 2 && vertices2.length >= 2) {
         const distance = Math.abs(vertices2[0].y - vertices1[2].y);
         
-        if (distance < 0.02) { // Too close together (normalized)
-          // Convert the combined area covering both buttons into pixel coordinates
-          const minX = Math.min(vertices1[0].x ?? 0, vertices2[0].x ?? 0);
-          const minY = Math.min(vertices1[0].y ?? 0, vertices2[0].y ?? 0);
-          const maxX = Math.max(vertices1[1].x ?? 0, vertices2[1].x ?? 0);
-          const maxY = Math.max(vertices1[2].y ?? 0, vertices2[2].y ?? 0);
-
+        if (distance < 0.02) { // Too close together
           feedback.push({
             title: "Button Spacing Issue",
             description: "Buttons appear to be too close together, which may cause accidental clicks on mobile devices. Consider increasing spacing between interactive elements.",
@@ -232,10 +223,10 @@ export class AIService {
             severity: "medium",
             roles: ["designer", "developer"],
             coordinates: {
-              x: Math.round(minX * widthPx),
-              y: Math.round(minY * heightPx),
-              width: Math.max(1, Math.round((maxX - minX) * widthPx)),
-              height: Math.max(1, Math.round((maxY - minY) * heightPx))
+              x: Math.min(vertices1[0].x, vertices2[0].x) * 1000,
+              y: Math.min(vertices1[0].y, vertices2[0].y) * 1000,
+              width: Math.abs(vertices2[1].x - vertices1[0].x) * 1000,
+              height: Math.abs(vertices2[2].y - vertices1[0].y) * 1000
             },
             aiGenerated: true,
             status: "open"
