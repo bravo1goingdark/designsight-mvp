@@ -70,12 +70,11 @@ DesignSight is a MERN stack application that provides systematic, AI-powered des
 ## 🚀 Features
 
 ### Core Functionality
-- **AI-Powered Design Analysis**: Automated feedback using OpenAI GPT-4V
+- **AI-Powered Design Analysis**: Automated feedback using Google Cloud Vision
 - **Coordinate-Anchored Feedback**: Precise location-based feedback on design elements
 - **Role-Based Views**: Filtered feedback for Designer, Reviewer, Product Manager, and Developer roles
 - **Image Upload & Management**: Support for PNG, JPG, JPEG, GIF, WebP formats
-- **Threaded Discussions**: Collaborative feedback through nested comment threads
-- **Real-time Collaboration**: Multiple users can discuss specific feedback items
+- **Threaded Discussions**: Collaborative feedback with parent/child comments (API supports nested threads; UI simplified)
 
 ### AI Analysis Categories
 - **Accessibility**: Color contrast, text readability, navigation issues
@@ -119,6 +118,22 @@ DesignSight is a MERN stack application that provides systematic, AI-powered des
 - Docker & Docker Compose
 - Google Cloud Vision API credentials
 
+## ✅ Assignment Compliance (72‑hour MVP)
+
+- Stack: MERN (MongoDB, Express, React with Vite, Node.js)
+- AI Integration: Google Cloud Vision API (Text Detection, Object Localization, Image Properties, SafeSearch). No mocks.
+- Local Deployment: docker-compose.yml starts MongoDB, MinIO, API, and Client.
+- Demo Scope: Designed for 1–2 images; costs documented below.
+- Coordinate-Anchored Feedback: Each item includes x, y, width, height; overlay shown on the image.
+- Role-Based Views: Designer, Reviewer, Product Manager, Developer filters.
+- Threaded Discussion: Comments with parentId (nested replies supported by API; UI renders a flat list in MVP).
+- Exports & Handoff: JSON and PDF reports; role-filtered supported.
+
+What’s intentionally out of scope for MVP:
+- Real-time collaboration (no WebSocket/live updates)
+- Auth/user accounts (role switcher only)
+- Advanced image tools (zoom/pan/annotations)
+- Extensive test coverage (includes key unit test for export summary)
 ## 🚀 Quick Start
 
 ### 1. Clone the Repository
@@ -309,11 +324,11 @@ designsight-mvp/
 
 ## 🚧 Known Limitations
 
-1. **Export Features**: PDF and JSON export functionality not yet implemented
-2. **Real-time Updates**: No WebSocket implementation for live collaboration
-3. **User Authentication**: Basic role switching without user accounts
-4. **Image Processing**: Limited to basic resizing and format conversion
-5. **AI Accuracy**: Coordinate mapping may not be 100% accurate
+1. **Real-time Updates**: No WebSocket implementation for live collaboration (refresh to see others’ changes)
+2. **User Authentication**: Role switcher only; no accounts/sessions in MVP
+3. **Nested Threads UI**: API supports nested replies via parentId; UI renders a flat list for simplicity
+4. **Image Tools**: No zoom/pan or advanced annotation tools in MVP
+5. **AI Accuracy**: Coordinate mapping may not be 100% accurate; depends on image clarity and model limits
 
 ## 🔮 Future Enhancements
 

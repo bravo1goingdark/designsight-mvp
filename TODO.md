@@ -5,11 +5,12 @@
 ### Core MVP Features
 - [x] **Project Management**: Create, read, update, delete projects
 - [x] **Image Upload**: Drag & drop image upload with validation
-- [x] **AI Integration**: OpenAI GPT-4V integration for design analysis
+- [x] **AI Integration**: Google Cloud Vision API integration for design analysis
 - [x] **Coordinate-Anchored Feedback**: Click-to-add feedback with precise coordinates
 - [x] **Role-Based Views**: Filter feedback by Designer, Reviewer, PM, Developer roles
-- [x] **Threaded Discussions**: Comment system with nested replies
+- [x] **Threaded Discussions**: Comment system (API supports nested replies via parentId; UI simplified)
 - [x] **Real-time UI**: Interactive feedback overlay system
+- [x] **Export & Handoff**: JSON and PDF reports; role-filtered exports
 - [x] **Docker Deployment**: Full stack containerization with docker-compose
 
 ### Technical Implementation
@@ -24,9 +25,6 @@
 ## 🚧 Incomplete Features
 
 ### Export & Handoff Features
-- [ ] **PDF Reports**: Generate visual feedback overlays with detailed descriptions
-- [ ] **JSON Export**: Machine-readable format for tool integrations
-- [ ] **Role-Filtered Exports**: Customized reports per team member type
 - [ ] **Batch Export**: Export multiple images/projects at once
 
 ### Advanced Features
@@ -46,8 +44,8 @@
 
 ### AI Integration
 - **Coordinate Accuracy**: AI-generated coordinates may not perfectly align with visual elements
-- **Analysis Quality**: Feedback quality depends on image clarity and AI model limitations
-- **Rate Limiting**: OpenAI API has rate limits that may affect concurrent users
+- **Analysis Quality**: Feedback quality depends on image clarity and model limitations
+- **Rate Limiting/Quotas**: Google Vision API has quotas; usage is minimal for demo but should be monitored
 - **Cost Management**: No built-in cost tracking or usage limits
 
 ### User Experience
@@ -61,6 +59,13 @@
 - **Test Coverage**: Limited test coverage for edge cases
 - **Documentation**: API documentation could be more comprehensive
 - **Code Splitting**: Frontend could benefit from better code splitting
+
+## 📄 Deliverables Status
+
+- [ ] **Demo Video (2–4 min)**: Record a walkthrough showing upload, AI analyze, role filter, overlay, exports, and comments
+- [ ] **Design Notes (docs/DesignNotes.md)**: Architecture decisions and trade-offs (create or expand)
+- [ ] **API Documentation (docs/API.md)**: Endpoint details with request/response examples (create or expand)
+- [ ] **Test Data**: Include sample images and guidance in README
 
 ## 🔧 Technical Improvements Needed
 
