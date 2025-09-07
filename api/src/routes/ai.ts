@@ -46,8 +46,8 @@ router.post('/analyze/:projectId/:imageId', async (req, res, next) => {
       });
     }
 
-    // Perform AI analysis
-    const analysisResult = await AIService.analyzeDesign(image.url);
+    // Perform AI analysis (pass image dimensions for accurate coordinate mapping)
+    const analysisResult = await AIService.analyzeDesign(image.url, image.width, image.height);
 
     // Save feedback to a database
     const feedbackPromises = analysisResult.feedback.map(feedbackData => 
