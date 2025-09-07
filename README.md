@@ -52,9 +52,13 @@ See `docs/API.md` for request/response details.
 See `docs/DesignNotes.md` detailing architecture, trade‑offs, and limitations.
 
 ## Testing
-Basic tests are TBD. Suggested quick wins:
-- Export summary unit test
-- API integration: upload -> analyze -> export JSON/PDF
+Run tests from repo root:
+
+```bash
+npm test
+```
+
+Currently includes a unit test for export summary aggregation. Optional e2e tests can be added later.
 
 ## Known limitations / TODO
 See `TODO.md`.
