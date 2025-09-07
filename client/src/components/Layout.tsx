@@ -115,32 +115,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </button>
             </div>
 
-            <div className="p-4 overflow-y-auto">
-              {/* Home link */}
-              <ul className="space-y-2 mb-4">
-                {navigation.map((item) => {
-                  const isActive = location.pathname === item.href
-                  return (
-                    <li key={item.name}>
-                      <Link
-                        to={item.href}
-                        className={cn(
-                          'flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                          isActive
-                            ? 'bg-primary-100 text-primary-700'
-                            : 'text-gray-600 hover:bg-gray-100'
-                        )}
-                      >
-                        <item.icon className="w-5 h-5" />
-                        <span>{item.name}</span>
-                      </Link>
-                    </li>
-                  )
-                })}
-              </ul>
-
-              {/* All projects */}
-              <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">All Projects</h4>
+            <div className="p-3 overflow-y-auto">
               <ul className="space-y-1">
                 {projects.map((p) => {
                   const href = `/project/${p._id}`
@@ -161,7 +136,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   )
                 })}
                 {projects.length === 0 && (
-                  <li className="text-xs text-gray-500 px-3 py-2">No projects yet</li>
+                  <li className="text-xs text-gray-500 px-2 py-1">No projects yet</li>
                 )}
               </ul>
             </div>
