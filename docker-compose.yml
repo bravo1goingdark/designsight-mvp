@@ -1,0 +1,50 @@
+services:
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: ["mongo:/data/db"]
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web console
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+
+  api:
+    build: ./api
+    ports: ["4000:4000"]
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/designsight
+      - MINIO_ENDPOINT=minio
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_BUCKET=designsight
+      - MINIO_USE_SSL=false
+      - PORT=4000
+      - NODE_ENV=development
+      - CORS_ORIGIN=http://localhost:5174
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/desginsight-f1f6c483f456.json
+      - GOOGLE_CLOUD_PROJECT_ID=desginsight
+    volumes:
+      - ./api/desginsight-f1f6c483f456.json:/app/desginsight-f1f6c483f456.json:ro
+    depends_on: [mongo, minio]
+
+  client:
+    build: ./client
+    ports: ["5174:5173"]
+    environment:
+      - VITE_API_URL=http://localhost:4000/api
+    depends_on: [api]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  mongo:
+  minio_data:
