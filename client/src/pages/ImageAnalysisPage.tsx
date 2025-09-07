@@ -39,7 +39,6 @@ const ImageAnalysisPage: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [analyzing, setAnalyzing] = useState(false)
   const [exporting, setExporting] = useState<null | 'pdf' | 'json'>(null)
-  const [exportRoleOnly, setExportRoleOnly] = useState(true)
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState({
     category: '',
@@ -337,7 +336,7 @@ const ImageAnalysisPage: React.FC = () => {
       const response = await exportApi.generatePDF({
         projectId: project._id,
         imageId: image.id,
-        role: exportRoleOnly ? currentRole : undefined,
+        role: currentRole,
         includeComments: true
       })
 
@@ -369,7 +368,7 @@ const ImageAnalysisPage: React.FC = () => {
       const response = await exportApi.generateJSON({
         projectId: project._id,
         imageId: image.id,
-        role: exportRoleOnly ? currentRole : undefined,
+        role: currentRole,
         includeComments: true
       })
 
@@ -454,15 +453,6 @@ const ImageAnalysisPage: React.FC = () => {
           </button>
           {/* Export controls */}
           <div className="flex items-center space-x-2">
-            <label className="flex items-center text-xs text-gray-600 mr-2">
-              <input
-                type="checkbox"
-                className="mr-1"
-                checked={exportRoleOnly}
-                onChange={(e) => setExportRoleOnly(e.target.checked)}
-              />
-              Role-only
-            </label>
             <button
               onClick={handleExportPDF}
               disabled={exporting === 'pdf'}
