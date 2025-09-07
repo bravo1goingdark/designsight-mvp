@@ -37,6 +37,7 @@ const ImageAnalysisPage: React.FC = () => {
   const [newComment, setNewComment] = useState('')
   const [loading, setLoading] = useState(false)
   const [analyzing, setAnalyzing] = useState(false)
+  const [exporting, setExporting] = useState<null | 'pdf' | 'json'>(null)
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState({
     category: '',
@@ -320,6 +321,8 @@ const ImageAnalysisPage: React.FC = () => {
   const handleExportPDF = async () => {
     if (!project || !image) return
 
+    setExporting('pdf')
+    const t = toast.loading('Generating PDF...')
     try {
       const response = await exportApi.generatePDF({
         projectId: project._id,
@@ -339,15 +342,19 @@ const ImageAnalysisPage: React.FC = () => {
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
 
-      toast.success('PDF report downloaded successfully')
+      toast.success('PDF report downloaded successfully', { id: t })
     } catch (error: any) {
-      toast.error('Failed to generate PDF report')
+      toast.error('Failed to generate PDF report', { id: t })
+    } finally {
+      setExporting(null)
     }
   }
 
   const handleExportJSON = async () => {
     if (!project || !image) return
 
+    setExporting('json')
+    const t = toast.loading('Preparing JSON export...')
     try {
       const response = await exportApi.generateJSON({
         projectId: project._id,
@@ -367,9 +374,11 @@ const ImageAnalysisPage: React.FC = () => {
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
 
-      toast.success('JSON data downloaded successfully')
+      toast.success('JSON data downloaded successfully', { id: t })
     } catch (error: any) {
-      toast.error('Failed to generate JSON export')
+      toast.error('Failed to generate JSON export', { id: t })
+    } finally {
+      setExporting(null)
     }
   }
 
@@ -435,19 +444,29 @@ const ImageAnalysisPage: React.FC = () => {
           </button>
           <button
             onClick={handleExportPDF}
+            disabled={exporting === 'pdf'}
             className="btn btn-outline btn-sm"
             title="Export PDF Report"
           >
-            <FileText className="w-4 h-4 mr-2" />
-            PDF
+            {exporting === 'pdf' ? (
+              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+            ) : (
+              <FileText className="w-4 h-4 mr-2" />
+            )}
+            {exporting === 'pdf' ? 'Generating…' : 'PDF'}
           </button>
           <button
             onClick={handleExportJSON}
+            disabled={exporting === 'json'}
             className="btn btn-outline btn-sm"
             title="Export JSON Data"
           >
-            <FileJson className="w-4 h-4 mr-2" />
-            JSON
+            {exporting === 'json' ? (
+              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+            ) : (
+              <FileJson className="w-4 h-4 mr-2" />
+            )}
+            {exporting === 'json' ? 'Preparing…' : 'JSON'}
           </button>
           <button
             onClick={handleAnalyzeImage}
