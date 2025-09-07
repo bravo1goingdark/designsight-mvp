@@ -3,10 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useRole } from '../contexts/RoleContext'
 import { cn } from '../utils/cn'
 import { 
-  Home, 
   FolderOpen, 
-  Users, 
-  Settings,
   Palette,
   Eye,
   Target,

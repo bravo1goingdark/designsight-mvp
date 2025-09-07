@@ -10,7 +10,6 @@ import {
   Sparkles, 
   Eye, 
   MessageSquare,
-  MoreVertical,
   Trash2,
   Edit3,
   ArrowLeft
@@ -280,7 +279,7 @@ const ProjectPage: React.FC = () => {
                     className="btn btn-outline btn-sm"
                   >
                     {analyzing === image.id ? (
-                      <div className="w-4 h-4 border-2 border-gray-300 border-t-primary-600 rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <Sparkles className="w-4 h-4" />
                     )}

@@ -9,9 +9,7 @@ import {
   Calendar, 
   Image as ImageIcon,
   ArrowRight,
-  Sparkles,
-  Users,
-  Settings
+  Sparkles
 } from 'lucide-react'
 
 const HomePage: React.FC = () => {
@@ -176,40 +174,6 @@ const HomePage: React.FC = () => {
         )}
       </div>
 
-      {/* Features Section */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Key Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="text-center">
-            <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <Sparkles className="w-6 h-6 text-primary-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">AI Analysis</h3>
-            <p className="text-sm text-gray-600">Automated design feedback using advanced AI vision models</p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <ImageIcon className="w-6 h-6 text-blue-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Coordinate Anchored</h3>
-            <p className="text-sm text-gray-600">Feedback precisely located on design elements</p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <Users className="w-6 h-6 text-green-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Role-Based Views</h3>
-            <p className="text-sm text-gray-600">Filtered feedback for different team roles</p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <Settings className="w-6 h-6 text-purple-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Collaboration</h3>
-            <p className="text-sm text-gray-600">Threaded discussions and export capabilities</p>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

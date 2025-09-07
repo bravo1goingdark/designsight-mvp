@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useProject } from '../contexts/ProjectContext'
 import { useRole } from '../contexts/RoleContext'
 import { feedbackApi, aiApi, commentApi, exportApi, Feedback, Comment, fileUrl, projectApi } from '../services/api'
+import LoadingSpinner from '../components/LoadingSpinner'
 import { cn } from '../utils/cn'
 import { 
   ArrowLeft, 
@@ -563,42 +564,51 @@ const ImageAnalysisPage: React.FC = () => {
             )}
 
             <div className="space-y-2 max-h-96 overflow-y-auto">
-              {filteredFeedback.map((item) => (
-                <div
-                  key={item._id}
-                  className={cn(
-                    'p-3 rounded-lg border cursor-pointer transition-colors',
-                    selectedFeedback?._id === item._id
-                      ? 'border-primary-300 bg-primary-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  )}
-                  onClick={() => handleSelectFeedback(item)}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-medium text-gray-900 text-sm">{item.title}</h4>
-                    <div className="flex space-x-1">
-                      <span className={cn('px-2 py-1 rounded-full text-xs font-medium', getSeverityColor(item.severity))}>
-                        {item.severity}
-                      </span>
+              {loading ? (
+                <div className="flex items-center justify-center py-8 text-gray-500">
+                  <LoadingSpinner size="sm" className="mr-2" />
+                  <span>Loading feedback…</span>
+                </div>
+              ) : (
+                <>
+                  {filteredFeedback.map((item) => (
+                    <div
+                      key={item._id}
+                      className={cn(
+                        'p-3 rounded-lg border cursor-pointer transition-colors',
+                        selectedFeedback?._id === item._id
+                          ? 'border-primary-300 bg-primary-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      )}
+                      onClick={() => handleSelectFeedback(item)}
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="font-medium text-gray-900 text-sm">{item.title}</h4>
+                        <div className="flex space-x-1">
+                          <span className={cn('px-2 py-1 rounded-full text-xs font-medium', getSeverityColor(item.severity))}>
+                            {item.severity}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-600 mb-2 line-clamp-2">{item.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className={cn('px-2 py-1 rounded-full text-xs font-medium', getCategoryColor(item.category))}>
+                          {item.category.replace('_', ' ')}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {new Date(item.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-xs text-gray-600 mb-2 line-clamp-2">{item.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className={cn('px-2 py-1 rounded-full text-xs font-medium', getCategoryColor(item.category))}>
-                      {item.category.replace('_', ' ')}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {new Date(item.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              ))}
-              
-              {filteredFeedback.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
-                  <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">No feedback found</p>
-                </div>
+                  ))}
+
+                  {filteredFeedback.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                      <p className="text-sm">No feedback found</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
