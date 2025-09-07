@@ -30,3 +30,5 @@ coverage/
 .temp/
 *.tmp
 
+WARP.md
+
