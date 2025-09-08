@@ -1,3 +1,9 @@
+## Submission
+- GitHub: https://github.com/bravo1goingdark/designsight-mvp
+- Live Demo: https://designsight-mvp.vercel.app/
+- Demo Video: https://drive.google.com/file/d/1fa8HTHecG4eBs9FVZmEEwQKEZhamGy-H/view?usp=sharing
+- Submission Tag: v0.1-submission
+
 # DesignSight - AI-Powered Design Feedback Platform
 
 DesignSight is an AI-powered design feedback platform built on MERN. It analyzes uploaded screenshots with Google Cloud Vision to generate structured, coordinate-anchored feedback you can filter by role (Designer, Reviewer, PM, Developer). Discuss via threaded comments and export development-ready PDF/JSON reports. Ships with Docker Compose, MongoDB, and MinIO for easy local or cloud deployment.
