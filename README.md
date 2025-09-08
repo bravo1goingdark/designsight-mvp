@@ -307,9 +307,10 @@ For support and questions:
 8. Add comments and collaborate on feedback
 
 ### Sample Test Images
-- Use actual UI/UX design screenshots for best results
-- Recommended size: 1920x1080 or similar
-- Formats: PNG, JPG, JPEG work best with AI analysis
+- See samples/README.md for two suggested scenarios and filenames to test the pipeline end-to-end.
+- Use actual UI/UX design screenshots (or your own designs) for best results.
+- Recommended size: 1920x1080 or similar; formats: PNG, JPG, JPEG work best with AI analysis.
+- Avoid proprietary or sensitive content; keep each image under ~10MB.
 
 ---
 
