@@ -117,7 +117,7 @@ PORT=4000
 NODE_ENV=development
 
 # CORS Configuration
-CORS_ORIGIN=http://localhost:5173
+CORS_ORIGIN=http://localhost:5174
 ```
 
 #### Frontend Environment
@@ -138,6 +138,9 @@ pnpm install
 ```
 
 ### 4. Start with Docker Compose
+
+Important: Place your Google Cloud Vision service account JSON at api/desginsight-f1f6c483f456.json (or edit docker-compose.yml to point to your own filename and path in both GOOGLE_APPLICATION_CREDENTIALS and the volume mapping).
+
 ```bash
 # From project root
 docker-compose up --build
@@ -147,10 +150,10 @@ This will start:
 - **MongoDB** on port 27017
 - **MinIO** on ports 9000 (API) and 9001 (Console)
 - **API Server** on port 4000
-- **Frontend** on port 5173
+- **Frontend** on port 5174
 
 ### 5. Access the Application
-- **Frontend**: http://localhost:5173
+- **Frontend**: http://localhost:5174
 - **API**: http://localhost:4000
 - **MinIO Console**: http://localhost:9001 (minioadmin/minioadmin)
 
@@ -304,7 +307,7 @@ For support and questions:
 ## 🎯 Demo Instructions
 
 1. Start the application with `docker-compose up --build`
-2. Navigate to http://localhost:5173
+2. Navigate to http://localhost:5174
 3. Create a new project
 4. Upload a design image (PNG/JPG recommended)
 5. Click "AI Analyze" to generate feedback
